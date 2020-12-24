@@ -7,7 +7,8 @@ module.exports = {
             user: req.body.user,
             password: req.body.password
         }
-        query(obj)
+       const data =  query(obj)
+        console.log(data)
         res.send(obj) // 返回数据
     }
 }
@@ -16,12 +17,11 @@ query = function (obj){
         host: 'localhost',
         port: '3306',
         user: 'root',
-        password: 'wgs19971211',
+        password: 'root',
         database: 'nodedatabase'
     })
     db.connect()
     db.query('SELECT * FROM user WHERE user = ? AND password = ?', [obj.user, obj.password], (err, data) => {
-        console.log(data)
-
+        return data !== null? data:err
     })
 }
