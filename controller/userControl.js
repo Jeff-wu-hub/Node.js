@@ -1,4 +1,4 @@
-const db = require('../config/db.connect')
+const userDao = require('../dao/userDao')
 module.exports = {
     /*
     * 用户登录接口控制*/
@@ -7,7 +7,7 @@ module.exports = {
             user: req.body.user,
             password: req.body.password
         }
-        db.doFun('SELECT * FROM user WHERE user = ? AND password = ?', [obj.user, obj.password],(err,data)=>{
+        userDao.selectUser([obj.user,obj.password],(err,data)=>{
             res.send(data[0])
         })
     }
