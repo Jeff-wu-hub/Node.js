@@ -3,16 +3,12 @@ const meta = require('../config/MetaInfo') // 引入状态信息
 module.exports = {
     // 查询用户信息
     userGet(req,res){
-            const id = req.body.id
-            if(!id){
-                res.send(meta._000.meta)
-            }
-            else{
+        const id = req.body.id
                 userDao.selectUser([id],(err,data)=>{
                 if(data.length>0){
                     const obj = {
                         meta:meta._200.meta,
-                        data:data[0]
+                        data:data
                     }
                     res.send(obj)
                 }
@@ -20,7 +16,6 @@ module.exports = {
                     res.send(meta._400.meta)
                 }
             })
-            }
     },
     // 更改用户密码信息
     userUpdate: function (req, res) {
@@ -44,6 +39,22 @@ module.exports = {
                 }
             })
         }
+    },
+    userPhoneUpdate: function(req,res){
+      if(!req.body.id){
+          res.send(meta._000.meta)
+      }else{
+          const body = req.body
+          userDao.updatePhone([body.phone,body.id],(err,data)=>{
+              userDao.selectUser([body.id],(err,data)=>{
+                  const obj = {
+                      meta:meta._201.meta,
+                      data:data
+                  }
+                  res.send(obj)
+              })
+          })
+      }
     },
     // 删除用户信息
     userDelete(req,res){
@@ -75,12 +86,32 @@ module.exports = {
                 for(let i in body) {
                     arr.push(body[i])
                 }
-                userDao.addUser(arr)
-                userDao.selectUser([id],(err,data)=>{
-                    res.send({
-                        meta:meta._203.meta,
-                        data:data
+                userDao.addUser(arr,()=>{
+                    userDao.selectUser([id],(err,data)=>{
+                        res.send({
+                            meta:meta._203.meta,
+                            data:data
+                        })
                     })
+                })
+            })
+        }
+    },
+    // 更新地址信息
+    userUpdateAddress(req,res){
+        const body = req.body
+        if(!body.id){
+            res.send(meta._000.meta)
+        }else{
+            const id = body.id
+            const address = body.address
+            userDao.updateAddress([address,id],()=>{
+                userDao.selectUser([id],(err,data)=>{
+                    const obj = {
+                        meta:meta._201.meta,
+                        data:data
+                    }
+                    res.send(obj)
                 })
             })
         }
