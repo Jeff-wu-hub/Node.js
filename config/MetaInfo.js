@@ -47,6 +47,18 @@ module.exports = {
             message:'更新失败'
         }
     },
+    _402:{
+        meta:{
+            code:402,
+            message:'删除失败'
+        }
+    },
+    _403:{
+        meta:{
+            code:403,
+            message:'添加失败'
+        }
+    },
     _000:{
         meta:{
             code:'000',
